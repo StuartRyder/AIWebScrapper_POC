@@ -6,8 +6,8 @@ import os
 
 load_dotenv()
 
-SBR_WEBDRIVER = os.getenv("SBR_WEBDRIVER")
-
+# SBR_WEBDRIVER = os.getenv("SBR_WEBDRIVER")
+SBR_WEBDRIVER = 'https://brd-customer-hl_c3f5364b-zone-scraping_browser_poc:hpztet3ihhi2@brd.superproxy.io:9515'
 
 def scrape_website(website):
     print("Connecting to Scraping Browser...")
@@ -32,7 +32,14 @@ def extract_body_content(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     body_content = soup.body
     if body_content:
-        return str(body_content)
+        # return str(body_content)
+        text_content = body_content.get_text(separator="\n")
+
+        # Extract URLS and append them to the text content
+        for a in soup.find_all("a",href=True):
+            text_content += f"\nURL: {a['href']} - Text: {a.get_text()}"
+    return text_content
+        
     return ""
 
 
